@@ -73,6 +73,8 @@ func generate(orig *desc.FileDescriptor) (*desc.FileDescriptor, error) {
 		srv, msgs, err := build(m)
 		if err != nil {
 			return nil, err
+		} else if srv == nil {
+			continue
 		}
 
 		f.AddService(srv)
@@ -106,6 +108,9 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 	msgs := []*builder.MessageBuilder{}
 
 	key, methods := comments(msg)
+	if len(methods) == 0 {
+		return nil, nil, nil
+	}
 
 	og, err := builder.FromMessage(msg)
 	if err != nil {
