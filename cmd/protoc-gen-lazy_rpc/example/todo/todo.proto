@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+// Methods: create,get,list,update,delete
+// Key: id
+message Todo {
+  int32 id = 1;
+  string task = 2;
+  bool done = 3;
+  Priority priority = 4;
+
+  google.protobuf.Timestamp create_time = 5;
+  google.protobuf.Timestamp update_time = 6;
+}
+
+enum Priority {
+  PRIORITY_UNSPECIFIC = 0;
+
+  LOW_PRIORITY = 1;
+
+  MEDIUM_PRIORITY = 2;
+
+  HIGH_PRIORITY = 3;
+}
