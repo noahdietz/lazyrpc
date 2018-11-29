@@ -64,7 +64,7 @@ func Generate(req *plugin.CodeGeneratorRequest) (*plugin.CodeGeneratorResponse, 
 }
 
 func generate(orig *desc.FileDescriptor) (*desc.FileDescriptor, error) {
-	f, err := file(orig.GetName())
+	f, err := file(orig)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,9 @@ func generate(orig *desc.FileDescriptor) (*desc.FileDescriptor, error) {
 	return f.Build()
 }
 
-func file(n string) (*builder.FileBuilder, error) {
-	f := builder.NewFile(n).SetProto3(true)
+func file(orig *desc.FileDescriptor) (*builder.FileBuilder, error) {
+	n := orig.GetName()
+	f := builder.NewFile(n).SetProto3(true).SetPackageName(orig.GetPackage())
 
 	if ndx := strings.LastIndex(n, "/"); ndx != -1 {
 		n = n[ndx+1:]
