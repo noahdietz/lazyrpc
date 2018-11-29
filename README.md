@@ -26,6 +26,7 @@ $ mkdir -p github.com/noahdietz
 $ cd github.com/noahdietz
 $ git clone https://github.com/noahdietz/lazyrpc.git
 $ cd lazyrpc/cmd/protoc-gen-lazy_rpc
+$ go get
 $ go install 
 ```
 
