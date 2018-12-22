@@ -24,6 +24,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"github.com/jhump/protoreflect/desc/protoprint"
+	annotations "github.com/noahdietz/lazyrpc/config"
 )
 
 var keyRegex *regexp.Regexp
@@ -108,10 +109,18 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 	srv := builder.NewService(msg.GetName() + "Service")
 	msgs := []*builder.MessageBuilder{}
 
-	key, methods := comments(msg)
+	ext, err := proto.GetExtension(msg.GetOptions(), annotations.E_Config)
+	if err != nil {
+		return nil, nil, err
+	}
+	config := ext.(*annotations.Config)
+
+	methods := config.GetMethods()
 	if len(methods) == 0 {
 		return nil, nil, nil
 	}
+
+	key := config.GetKey()
 
 	og, err := builder.FromMessage(msg)
 	if err != nil {
@@ -188,18 +197,4 @@ func add(res *plugin.CodeGeneratorResponse, name, data string) {
 	file.Content = proto.String(data)
 
 	res.File = append(res.File, file)
-}
-
-func comments(msg *desc.MessageDescriptor) (key string, methods []string) {
-	cmt := msg.GetSourceInfo().GetLeadingComments()
-
-	if k := keyRegex.FindStringSubmatch(cmt); len(k) > 0 {
-		key = strings.TrimSpace(k[1])
-	}
-
-	if m := methodRegex.FindStringSubmatch(cmt); len(m) > 0 {
-		methods = strings.Split(strings.TrimSpace(m[1]), ",")
-	}
-
-	return
 }

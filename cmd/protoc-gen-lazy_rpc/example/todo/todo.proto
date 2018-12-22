@@ -1,10 +1,14 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "lazy.proto";
 
-// Methods: create,get,list,update,delete
-// Key: id
 message Todo {
+  option (lazy.config) = {
+    methods: ["create", "get", "list", "update", "delete"]
+    key: "id"
+  };
+
   int32 id = 1;
   string task = 2;
   bool done = 3;

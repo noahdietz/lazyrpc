@@ -30,36 +30,48 @@ $ go get
 $ go install 
 ```
 
-### Configuration Comments
+### Configuration Options
 
-To keep things simple, but still somewhat configurable, `lazyrpc` takes message level comments as configuration.
-The config phrases can be anywhere in the leading comments of a message and are as follows:
+The configuration of `lazyrpc` generation is defined using proto Message options.
+The option available options are as follows:
 
 * Methods: a comma-delimited list of methods to generate for this message's service
-  * Supported methods are: `create,get,list,update,delete` (this is valid example)
+  * Supported methods are: `"create", "get", "list", "update", "delete"`
 * Key: a single field name for use as a key in get & delete methods.
   * Omission of this phrase results in the entire message being used as input
 
 Example:
 
 ```
-// Methods: create,get,list,update,delete
-// Key: id
+import "lazy.proto"
+
+...
+
 message Todo {
+  option (lazy.config) = {
+    methods: ["create", "get", "list", "update", "delete"]
+    key: "id"
+  };
+  
   int32 id = 1;
   string task = 2;
   bool done = 3;
 }
 ```
 
-A message without a `Methods` phrase will be ignored entirely.
+A message without a `lazy.config.methods` field will be ignored entirely.
+
+The extension defintion can be found in [proto/lazy.proto](./protos/lazy.proto).
+
+The compiled Go definition can be imported as `github.com/noahdietz/lazyrpc/config` and found in [config/lazy.pb.go](./config/lazy.pb.go).
 
 ### Invocation
 
 Invoke the plugin like any other protoc plugin:
 
 ```
-$ protoc -I my/protos/ --lazy_rpc_out my/protos/ my/protos/a.proto
+export LAZY_RPC_PROTOS=$GOPATH/src/github.com/noahdietz/lazyrpc/protos
+$ protoc -I $LAZY_RPC_PROTOS -I my/protos/ --lazy_rpc_out my/protos/ my/protos/a.proto
 ```
 
 ### Output

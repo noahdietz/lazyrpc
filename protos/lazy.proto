@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lazy;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "github.com/noahdietz/lazyrpc/config;config";
+
+extend google.protobuf.MessageOptions {
+    Config config = 51234;
+}
+
+message Config {
+    repeated string methods = 1;
+    string key = 2;
+}
