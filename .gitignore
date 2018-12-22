@@ -1,2 +1,2 @@
-cmd/protoc-gen-lazy_rpc/example/todo/todo_service.proto
+cmd/protoc-gen-lazyrpc/example/todo/todo_service.proto
 protos/api-common-protos

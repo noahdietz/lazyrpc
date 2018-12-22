@@ -15,7 +15,7 @@ in the context of building a protoc plugin.
 You can either install the plugin directly:
 
 ```
-$ go get github.com/noahdietz/lazyrpc/cmd/protoc-gen-lazy_rpc
+$ go get github.com/noahdietz/lazyrpc/cmd/protoc-gen-lazyrpc
 ```
 
 Or build it from source:
@@ -25,7 +25,7 @@ $ cd $GOPATH/src
 $ mkdir -p github.com/noahdietz
 $ cd github.com/noahdietz
 $ git clone https://github.com/noahdietz/lazyrpc.git
-$ cd lazyrpc/cmd/protoc-gen-lazy_rpc
+$ cd lazyrpc/cmd/protoc-gen-lazyrpc
 $ go get
 $ go install 
 ```
@@ -71,7 +71,7 @@ Invoke the plugin like any other protoc plugin:
 
 ```
 export LAZY_RPC_PROTOS=$GOPATH/src/github.com/noahdietz/lazyrpc/protos
-$ protoc -I $LAZY_RPC_PROTOS -I my/protos/ --lazy_rpc_out my/protos/ my/protos/a.proto
+$ protoc -I $LAZY_RPC_PROTOS -I my/protos/ --lazyrpc_out my/protos/ my/protos/a.proto
 ```
 
 ### Output
