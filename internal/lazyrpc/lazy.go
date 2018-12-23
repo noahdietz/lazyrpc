@@ -16,6 +16,7 @@ package lazyrpc
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
@@ -108,12 +109,13 @@ func file(orig *desc.FileDescriptor) (*builder.FileBuilder, error) {
 func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.MessageBuilder, error) {
 	srv := builder.NewService(msg.GetName() + "Service")
 	msgs := []*builder.MessageBuilder{}
+	opts := msg.GetOptions()
 
-	if !msg.IsExtendable() {
+	if opts == nil {
 		return nil, nil, nil
 	}
 
-	ext, err := proto.GetExtension(msg.GetOptions(), annotations.E_Config)
+	ext, err := proto.GetExtension(opts, annotations.E_Config)
 	if err == proto.ErrMissingExtension {
 		return nil, nil, nil
 	} else if err != nil {
@@ -136,19 +138,19 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 	for _, m := range methods {
 		var in, out *builder.RpcType
 
-		verb := strings.Title(m)
+		verb := strings.Title(strings.ToLower(m.String()))
 		name := verb + msg.GetName()
 
 		switch m {
-		case "update":
+		case annotations.Method_UPDATE:
 			fallthrough //update & create are almost the same
-		case "create":
+		case annotations.Method_CREATE:
 			in = builder.RpcTypeMessage(og, false)
 			out = in
-		case "get":
+		case annotations.Method_GET:
 			out = builder.RpcTypeMessage(og, false)
 			fallthrough // get & delete are almost the same
-		case "delete":
+		case annotations.Method_DELETE:
 			in = builder.RpcTypeMessage(og, false)
 			if key != "" {
 				ogF, err := builder.FromField(msg.FindFieldByName(key))
@@ -163,7 +165,7 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 			}
 
 			out = builder.RpcTypeMessage(og, false)
-		case "list":
+		case annotations.Method_LIST:
 			tmpF := builder.NewField("content", builder.FieldTypeMessage(og)).SetRepeated()
 
 			o := builder.
@@ -180,6 +182,7 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 			msgs = append(msgs, i)
 			in = builder.RpcTypeMessage(i, false)
 		default:
+			log.Printf("Found method value: %v\n", m)
 			continue
 		}
 

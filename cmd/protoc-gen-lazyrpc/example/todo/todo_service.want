@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+message GetTodoRequest {
+  int32 id = 1;
+}
+
+message ListTodoResponse {
+  string next_page_token = 1;
+
+  repeated Todo content = 2;
+}
+
+message ListTodoRequest {
+  int32 page_size = 1;
+
+  string page_token = 2;
+}
+
+message DeleteTodoRequest {
+  int32 id = 1;
+}
+
+service TodoService {
+  rpc CreateTodo ( Todo ) returns ( Todo );
+
+  rpc GetTodo ( GetTodoRequest ) returns ( Todo );
+
+  rpc ListTodo ( ListTodoRequest ) returns ( ListTodoResponse );
+
+  rpc UpdateTodo ( Todo ) returns ( Todo );
+
+  rpc DeleteTodo ( DeleteTodoRequest ) returns ( Todo );
+}
+
+import "todo.proto";

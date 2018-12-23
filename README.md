@@ -35,8 +35,8 @@ $ go install
 The configuration of `lazyrpc` generation is defined using proto Message options.
 The option available options are as follows:
 
-* Methods: a comma-delimited list of methods to generate for this message's service
-  * Supported methods are: `"create", "get", "list", "update", "delete"`
+* Methods: a list of methods to generate for this message's service
+  * Supported methods are: `CREATE, GET, LIST, UPDATE, DELETE`
 * Key: a single field name for use as a key in get & delete methods.
   * Omission of this phrase results in the entire message being used as input
 
@@ -49,7 +49,7 @@ import "lazy.proto"
 
 message Todo {
   option (lazy.config) = {
-    methods: ["create", "get", "list", "update", "delete"]
+    methods: [CREATE, GET, LIST, UPDATE, DELETE]
     key: "id"
   };
   

@@ -7,10 +7,24 @@ import "google/protobuf/descriptor.proto";
 option go_package = "github.com/noahdietz/lazyrpc/config;config";
 
 extend google.protobuf.MessageOptions {
-    Config config = 51234;
+    Config config = 4494;
 }
 
 message Config {
-    repeated string methods = 1;
+    repeated Method methods = 1;
     string key = 2;
+}
+
+enum Method {
+    UNKOWN_METHOD = 0;
+
+    CREATE = 1;
+
+    GET = 2;
+
+    LIST = 3;
+
+    UPDATE = 4;
+
+    DELETE = 5;
 }

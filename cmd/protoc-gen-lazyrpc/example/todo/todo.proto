@@ -5,7 +5,7 @@ import "lazy.proto";
 
 message Todo {
   option (lazy.config) = {
-    methods: ["create", "get", "list", "update", "delete"]
+    methods: [CREATE, GET, LIST, UPDATE, DELETE]
     key: "id"
   };
 
