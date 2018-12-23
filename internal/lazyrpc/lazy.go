@@ -109,8 +109,14 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 	srv := builder.NewService(msg.GetName() + "Service")
 	msgs := []*builder.MessageBuilder{}
 
+	if !msg.IsExtendable() {
+		return nil, nil, nil
+	}
+
 	ext, err := proto.GetExtension(msg.GetOptions(), annotations.E_Config)
-	if err != nil {
+	if err == proto.ErrMissingExtension {
+		return nil, nil, nil
+	} else if err != nil {
 		return nil, nil, err
 	}
 	config := ext.(*annotations.Config)
