@@ -10,11 +10,39 @@ extend google.protobuf.MessageOptions {
     Config config = 4494;
 }
 
+// lazyrpc configuration fields for lazy generation of proto
+// Service files.
 message Config {
+    // The list of RPCs to generate for the configured message.
+    //
+    // Example:
+    //
+    //  message Todo {
+    //   option (lazy.config) = {
+    //     methods: [CREATE, LIST, DELETE]
+    //   };
+    //
+    // An empty list or option omission signals to skip a message
     repeated Method methods = 1;
+
+    // The message field to be used as the key in GET & DELETE
+    // methods.
+    //
+    // Example:
+    //
+    //  message Todo {
+    //   option (lazy.config) = {
+    //     methods: [GET, DELETE]
+    //     key: "id"
+    //   };
+    //
+    // If a key is not specified, the configured message in its
+    // entirety is used as input.
     string key = 2;
 }
 
+// The types of resource-oriented methods supported by lazyrpc.
+// Learn more from https://cloud.google.com/apis/design.
 enum Method {
     UNKOWN_METHOD = 0;
 

@@ -17,7 +17,6 @@ package lazyrpc
 import (
 	"fmt"
 	"log"
-	"regexp"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -28,15 +27,9 @@ import (
 	annotations "github.com/noahdietz/lazyrpc/config"
 )
 
-var keyRegex *regexp.Regexp
-var methodRegex *regexp.Regexp
-
 // Generate service(s) & method(s) for plain ol'Messages
 func Generate(req *plugin.CodeGeneratorRequest) (*plugin.CodeGeneratorResponse, error) {
 	var res plugin.CodeGeneratorResponse
-
-	keyRegex = regexp.MustCompile(`Key:(\s*[a-z]+[^\s]*)`)
-	methodRegex = regexp.MustCompile(`Methods:(\s*[a-z,]+[^\s]*)`)
 
 	d, err := desc.CreateFileDescriptors(req.GetProtoFile())
 	if err != nil {
