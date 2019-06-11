@@ -39,6 +39,20 @@ message Config {
     // If a key is not specified, the configured message in its
     // entirety is used as input.
     string key = 2;
+
+    // The default host of the generated message-specific service.
+    //
+    // Example:
+    //
+    //  message Todo {
+    //   option (lazy.config) = {
+    //     methods: [CREATE, LIST]
+    //     default_host: "api.todos.com"
+    //   };
+    //
+    // The value is injected as a proto Service option google.api.default_host
+    // defined at https://github.com/googleapis/api-common-protos.
+    string default_host = 3;
 }
 
 // The types of resource-oriented methods supported by lazyrpc.

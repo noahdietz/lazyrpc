@@ -20,11 +20,13 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"github.com/jhump/protoreflect/desc/protoprint"
 	annotations "github.com/noahdietz/lazyrpc/config"
+	gapic "google.golang.org/genproto/googleapis/api/annotations"
 )
 
 // Generate service(s) & method(s) for plain ol'Messages
@@ -122,6 +124,15 @@ func build(msg *desc.MessageDescriptor) (*builder.ServiceBuilder, []*builder.Mes
 	}
 
 	key := config.GetKey()
+
+	if host := config.GetDefaultHost(); host != "" {
+		opts := &descriptor.ServiceOptions{}
+		if err := proto.SetExtension(opts, gapic.E_DefaultHost, proto.String(host)); err != nil {
+			return nil, nil, err
+		}
+
+		srv.SetOptions(opts)
+	}
 
 	og, err := builder.FromMessage(msg)
 	if err != nil {

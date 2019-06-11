@@ -8,6 +8,7 @@ test-update:
 
 annotations:
 	./compile_protos.sh
+	go install ./config
 
 clean:
 	rm -rf ./cmd/protoc-gen-lazyrpc/example/todo/todo_service.proto
